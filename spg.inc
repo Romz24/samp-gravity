@@ -3,7 +3,7 @@ SetPlayerGravity
 */
 
 #if defined _SPG_included
-	#endinput
+    #endinput
 #endif
 #define _SPG_included
 
@@ -19,12 +19,12 @@ static Float:SPG_PlayerGravity[MAX_PLAYERS];
 
 /*Functions*/
 stock SetPlayerGravity(playerid, Float:gravity)
-{	
-	if(!IsPlayerConnected(playerid)) return 0;
-		
-	SPG_PlayerGravity[playerid] = gravity;
-	
-	new BitStream:spg_bs = BS_New(); 
+{    
+    if(!IsPlayerConnected(playerid)) return 0;
+        
+    SPG_PlayerGravity[playerid] = gravity;
+    
+    new BitStream:spg_bs = BS_New(); 
 
     BS_WriteValue( 
         spg_bs, 
@@ -33,15 +33,15 @@ stock SetPlayerGravity(playerid, Float:gravity)
 
     BS_RPC(spg_bs, playerid, 0x92); 
     BS_Delete(spg_bs); 
-	return 1;
+    return 1;
 }
 
 stock GetPlayerGravity(playerid, &Float:gravity)
 {
-	if(!IsPlayerConnected(playerid)) return 0;
-	
-	gravity = SPG_PlayerGravity[playerid];
-	return 1;
+    if(!IsPlayerConnected(playerid)) return 0;
+    
+    gravity = SPG_PlayerGravity[playerid];
+    return 1;
 }
 
 /*Callbacks*/
@@ -57,11 +57,11 @@ public OnPlayerConnect(playerid)
 
 public OnOutcomingRPC(playerid, rpcid, BitStream:bs)
 {
-	if(rpcid == 0x92)
-	{
-		BS_ReadValue(bs, PR_FLOAT, SPG_PlayerGravity[playerid]);
-		BS_ResetReadPointer(bs);
-	}
+    if(rpcid == 0x92)
+    {
+        BS_ReadValue(bs, PR_FLOAT, SPG_PlayerGravity[playerid]);
+        BS_ResetReadPointer(bs);
+    }
     #if defined SPG_OnOutcomingRPC
         return SPG_OnOutcomingRPC(playerid, rpcid, bs);
     #else
