@@ -36,12 +36,11 @@ stock SetPlayerGravity(playerid, Float:gravity)
     return 1;
 }
 
-stock GetPlayerGravity(playerid, &Float:gravity)
+stock Float:GetPlayerGravity(playerid, &Float:gravity = 0.0)
 {
-    if(!IsPlayerConnected(playerid)) return 0;
-    
-    gravity = SPG_PlayerGravity[playerid];
-    return 1;
+	if(!IsPlayerConnected(playerid)) return gravity;
+
+	return (gravity = SPG_PlayerGravity[playerid]);
 }
 
 /*Callbacks*/
