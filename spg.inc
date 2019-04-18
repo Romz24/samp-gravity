@@ -3,37 +3,37 @@ SetPlayerGravity
 */
 
 #if defined _SPG_included
-    #endinput
+	#endinput
 #endif
 #define _SPG_included
 
 #if ! defined PAWNRAKNET_INC_
-    #error You must have Pawn.RakNet include in order to use this one.
+	#error You must have Pawn.RakNet include in order to use this one.
 #endif
 
 #if !defined GetGravity
-    native Float:GetGravity();
+	native Float:GetGravity();
 #endif
 
 static Float:SPG_PlayerGravity[MAX_PLAYERS];
 
 /*Functions*/
 stock SetPlayerGravity(playerid, Float:gravity)
-{    
-    if(!IsPlayerConnected(playerid)) return 0;
-        
-    SPG_PlayerGravity[playerid] = gravity;
-    
-    new BitStream:spg_bs = BS_New(); 
+{
+	if(!IsPlayerConnected(playerid)) return 0;
 
-    BS_WriteValue( 
-        spg_bs, 
-        PR_FLOAT, gravity 
-    ); 
+	SPG_PlayerGravity[playerid] = gravity;
 
-    BS_RPC(spg_bs, playerid, 0x92); 
-    BS_Delete(spg_bs); 
-    return 1;
+	new BitStream:spg_bs = BS_New(); 
+
+	BS_WriteValue( 
+		spg_bs, 
+		PR_FLOAT, gravity 
+	); 
+
+	BS_RPC(spg_bs, playerid, 0x92); 
+	BS_Delete(spg_bs); 
+	return 1;
 }
 
 stock Float:GetPlayerGravity(playerid, &Float:gravity = 0.0) 
@@ -46,26 +46,26 @@ stock Float:GetPlayerGravity(playerid, &Float:gravity = 0.0)
 /*Callbacks*/
 public OnPlayerConnect(playerid)
 {
-    SPG_PlayerGravity[playerid] = GetGravity();
-    #if defined SPG_OnPlayerConnect
-        return SPG_OnPlayerConnect(playerid);
-    #else
-        return 1;
-    #endif
+	SPG_PlayerGravity[playerid] = GetGravity();
+	#if defined SPG_OnPlayerConnect
+		return SPG_OnPlayerConnect(playerid);
+	#else
+		return 1;
+	#endif
 }
 
 public OnOutcomingRPC(playerid, rpcid, BitStream:bs)
 {
-    if(rpcid == 0x92)
-    {
-        BS_ReadValue(bs, PR_FLOAT, SPG_PlayerGravity[playerid]);
-        BS_ResetReadPointer(bs);
-    }
-    #if defined SPG_OnOutcomingRPC
-        return SPG_OnOutcomingRPC(playerid, rpcid, bs);
-    #else
-        return 1;
-    #endif
+	if(rpcid == 0x92)
+	{
+		BS_ReadValue(bs, PR_FLOAT, SPG_PlayerGravity[playerid]);
+		BS_ResetReadPointer(bs);
+	}
+	#if defined SPG_OnOutcomingRPC
+		return SPG_OnOutcomingRPC(playerid, rpcid, bs);
+	#else
+		return 1;
+	#endif
 }
 
 /*Hooks*/
